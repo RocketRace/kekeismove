@@ -24,6 +24,8 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         
         For a list of valid self-assignable role, see the <ranks> command.
         '''
+        if not rank:
+            raise EmptyInput
         if isinstance(rank, str):
             rank = discord.utils.find(lambda r: r.name.lower() == rank, ctx.guild.roles)
             if rank is None: 
@@ -46,6 +48,8 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             await ctx.send("That role is above mine! I don't have permissions to give it to you :(")
         elif isinstance(getattr(err, "original", err), commands.RoleNotFound):
             await ctx.send("That's not a valid self-assignable role. See the <ranks> command for a list.")
+        elif isinstance(err, EmptyInput):
+            await ctx.send("<rank> is a required argument that's missing! It should be the ping, ID or name of a self-assignable role.")
 
     @commands.command()
     async def ranks(self, ctx: commands.Context):

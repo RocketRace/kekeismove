@@ -9,6 +9,9 @@ class InvalidRole(KekeException):
         self.role = role
         super().__init__(*args)
 
+class EmptyInput(KekeException):
+    '''No input passed'''
+
 class BadHierarchy(KekeException):
     '''Role hierarchy is hecked'''
 
