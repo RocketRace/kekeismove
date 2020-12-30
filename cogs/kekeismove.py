@@ -48,7 +48,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             await ctx.send("That role is above mine! I don't have permissions to give it to you :(")
         elif isinstance(getattr(err, "original", err), commands.RoleNotFound):
             await ctx.send("That's not a valid self-assignable role. See the <ranks> command for a list.")
-        elif isinstance(err, EmptyInput):
+        elif isinstance(err, commands.MissingRequiredArgument):
             await ctx.send("<rank> is a required argument that's missing! It should be the ping, ID or name of a self-assignable role.")
 
     @commands.command()
