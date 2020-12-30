@@ -25,7 +25,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         For a list of valid self-assignable role, see the <ranks> command.
         '''
         if isinstance(rank, str):
-            rank = discord.utils.find(lambda r: str(r.name) == rank, ctx.guild.roles)
+            rank = discord.utils.find(lambda r: r.name.lower() == rank, ctx.guild.roles)
             if rank is None: 
                 raise InvalidRole(rank)
         if rank.id not in self.bot.settings["ranks"]:
