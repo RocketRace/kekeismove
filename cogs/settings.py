@@ -77,7 +77,7 @@ class Settings(commands.Cog):
             message_position = "Not set"
         embed.add_field(name="Reaction role", value=message_position)
         enabled = 'enabled' if self.bot.settings['nicknames']['enabled'] else 'disabled'
-        opted_out = self.bot.settings['nicknames']['opted_out']
+        opted_out = len(self.bot.settings['nicknames']['opted_out'])
         embed.add_field(name="Nicknames", value=f"Auto-changes {enabled}\n`{opted_out}` members opted out")
         embed.set_footer(text="See the <export> command for more detailed information.")
         await ctx.send(embed=embed)
