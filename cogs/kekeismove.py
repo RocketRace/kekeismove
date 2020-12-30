@@ -4,6 +4,7 @@ from discord.ext import commands
 import discord
 from cogs.utils import *
 from cogs.errors import *
+import typing
 
 class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
     '''KEKE IS MOVE AND HELP
@@ -18,11 +19,15 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
     
     @commands.command(name="rank")
     @commands.bot_has_permissions(manage_roles=True)
-    async def add_rank(self, ctx: commands.Context, *, rank: discord.Role):
+    async def add_rank(self, ctx: commands.Context, *, rank: typing.Union[discord.Role, str]):
         '''Adds or removes a rank from you
         
         For a list of valid self-assignable role, see the <ranks> command.
         '''
+        if isinstance(rank, str):
+            rank = discord.utils.find(lambda r: str(r.name) == rank, ctx.guild.roles)
+            if rank is None: 
+                raise InvalidRole(rank)
         if rank.id not in self.bot.settings["ranks"]:
             raise InvalidRole(rank)
         role = discord.utils.find(lambda role: role == rank, ctx.author.roles)

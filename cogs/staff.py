@@ -101,13 +101,13 @@ class Staff(commands.Cog):
     @commands.command(name="enablenicknames")
     async def enable_nicknames(self, ctx: commands.Context):
         '''Enables automatic nickname changes'''
-        self.bot.settings["nickanmes"]["enabled"] = True
+        self.bot.settings["nicknames"]["enabled"] = True
         await ctx.send("Nickname craziness enabled.")
     
     @commands.command(name="disablenicknames")
     async def dis_nicknames(self, ctx: commands.Context):
         '''Disables automatic nickname changes'''
-        self.bot.settings["nickanmes"]["enabled"] = False
+        self.bot.settings["nicknames"]["enabled"] = False
         await ctx.send("Nickname craziness disabled.")
 
     @commands.group(name="specialroles", aliases=["sr"], invoke_without_command=True)
