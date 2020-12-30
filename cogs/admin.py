@@ -10,6 +10,7 @@ class EmbedHelp(commands.DefaultHelpCommand):
         for page in self.paginator.pages:
             embed = discord.Embed(title="Help command", color=self.context.bot.settings["color"], description=page)
             await destination.send(embed=embed)
+
 class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     '''Bot administration'''
 
@@ -36,6 +37,8 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         elif isinstance(err, discord.HTTPException):
             await ctx.send("Something went wrong performing a request...")
         else:
+            if hasattr(ctx.command, "on_error"):
+                return
             await ctx.send("Something went wrong.")
 
         tb = "".join(traceback.format_exception(type(err), err, err.__traceback__))
