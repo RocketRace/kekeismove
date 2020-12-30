@@ -32,6 +32,7 @@ def get_prefix(bot, message):
 bot = Bot(
     command_prefix=get_prefix,
     intents=intents,
+    activity=discord.Game(name="!help"),
     allowed_mentions=discord.AllowedMentions.none() # the bot pings nobody unless specified
 )
 
