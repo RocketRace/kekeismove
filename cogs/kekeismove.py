@@ -87,7 +87,6 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        print(message.guild.emojis)
         if any(message.content.startswith(x) for x in ("i'm ", "I'm ")):
             if message.author.id not in self.bot.settings["nicknames"]["opted_out"]:
                 nick = message.content[4:].strip().replace("\n", " ")
