@@ -87,9 +87,15 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        if any(message.content.startswith(x) for x in ("i'm ", "I'm ")):
+        if not self.bot.settings["nicknames"]["enabled"]: return
+        flag = None
+        for x in ("i'm ", "I'm ", "im ", "Im ", "i am ", "I am "):
+            if message.content.startswith(x):
+                flag = x
+                break
+        if flag is not None:
             if message.author.id not in self.bot.settings["nicknames"]["opted_out"]:
-                nick = message.content[4:].strip().replace("\n", " ")
+                nick = message.content.replace(flag, "", 1).strip().replace("\n", " ")
                 if len(nick) == 0:
                     return
                 clean_backtick = "\u200b`\u200b"
