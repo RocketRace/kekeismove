@@ -123,7 +123,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                 else:
                     await message.channel.send(
                         f"{message.author.mention} <a:is:793742253452558356> ``{nick.replace('`', clean_backtick)}``\n" + \
-                        "*Use the `<optout>` command to hide me.*"
+                        f"*Use the ``{self.bot.settings['prefixes'][0]}optout`` command to hide me.*"
                         )
 
 def setup(bot):
