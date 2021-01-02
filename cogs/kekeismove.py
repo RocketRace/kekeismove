@@ -101,7 +101,10 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     return
                 clean_backtick = "\u200b`\u200b"
                 if nick.count("||") >= 2: # don't reveal spoilers
-                    return
+                    return await message.channel.send(
+                        f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \
+                        f"||``{nick.replace('`', clean_backtick).replace('|','')}``|| (that nickname has spoilers!)\n" + \
+                        "*Use the `<optout>` command to hide me.*")
                 if len(nick) > 32:
                     return await message.channel.send(
                         f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \

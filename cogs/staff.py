@@ -212,6 +212,7 @@ class Staff(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         # why must I make such a mess
+        print(payload)
         guild = self.bot.get_guild(payload.guild_id)
         member = guild.get_member(payload.user_id)
         for _ in range(1): # goto but not really
