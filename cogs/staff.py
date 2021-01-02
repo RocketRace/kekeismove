@@ -176,14 +176,12 @@ class Staff(commands.Cog):
         '''
         for emoji in self.bot.settings["pronoun_roles"]["emoji"]:
             await message.add_reaction(emoji)
-        self.bot.settings["pronoun_roles"]["channel"] = message.channel.id
         self.bot.settings["pronoun_roles"]["message"] = message.id
         await ctx.send(f"The pronoun reaction role message has been updated to the following message:\n<{message.jump_url}>.")
     
     @pronoun_roles.command(name="unset")
     async def unset_pronouns(self, ctx: commands.Context):
         '''Disables the current special reaction role message'''
-        self.bot.settings["special_roles"]["channel"] = None
         self.bot.settings["special_roles"]["message"] = None
         await ctx.send(f"The reaction role message has been unset.")
 
@@ -194,7 +192,6 @@ class Staff(commands.Cog):
         guild = self.bot.get_guild(payload.guild_id)
         emoji = str(payload.emoji).replace("<a:", "<:") if payload.emoji.animated else str(payload.emoji)
         for _ in range(1):
-            if payload.channel_id != self.bot.settings["special_roles"]["channel"]: break
             if payload.message_id != self.bot.settings["special_roles"]["message"]: break
             roles = self.bot.settings["special_roles"]["emoji"].get(emoji)
             if roles is None: break
@@ -203,7 +200,6 @@ class Staff(commands.Cog):
             if colorless in member.roles:
                 if colored not in member.roles:
                     await member.add_roles(colored)
-        if payload.channel_id != self.bot.settings["pronoun_roles"]["channel"]: return
         if payload.message_id != self.bot.settings["pronoun_roles"]["message"]: return
         role_id = self.bot.settings["pronoun_roles"]["emoji"].get(emoji)
         if role_id is None: return
@@ -218,16 +214,14 @@ class Staff(commands.Cog):
         member = guild.get_member(payload.user_id)
         emoji = str(payload.emoji).replace("<a:", "<:") if payload.emoji.animated else str(payload.emoji)
         for _ in range(1): # goto but not really
-            if payload.channel_id != self.bot.settings["special_roles"]["channel"]: break
             if payload.message_id != self.bot.settings["special_roles"]["message"]: break
-            roles = self.bot.settings["special_roles"]["emoji"][emoji]
+            roles = self.bot.settings["special_roles"]["emoji"].get(emoji)
             if roles is None: break
             colored = guild.get_role(roles["colored"])
             colorless = guild.get_role(roles["colorless"])
             if colorless in member.roles:
                 if colored in member.roles:
                     await member.remove_roles(colored)
-        if payload.channel_id != self.bot.settings["pronoun_roles"]["channel"]: return
         if payload.message_id != self.bot.settings["pronoun_roles"]["message"]: return
         role_id = self.bot.settings["pronoun_roles"]["emoji"].get(emoji)
         if role_id is None: return

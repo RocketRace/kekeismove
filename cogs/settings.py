@@ -32,14 +32,15 @@ class Settings(commands.Cog):
             for field in (
                 "prefixes", "color", "disabled_commands", "stats", 
                 "server", "staff_role", "contribute_role", "nitro_role",
-                "ranks", "special_roles", "nicknames"
+                "ranks", "special_roles", "pronoun_roles", "nicknames"
             ):
                 obj[field]
             obj["stats"]["commands"]
             obj["stats"]["nicknames"]
-            obj["special_roles"]["channel"]
             obj["special_roles"]["message"]
             obj["special_roles"]["emoji"]
+            obj["pronoun_roles"]["message"]
+            obj["pronoun_roles"]["emoji"]
             obj["nicknames"]["enabled"]
             obj["nicknames"]["opted_out"]
         except (KeyError, TypeError) as err:

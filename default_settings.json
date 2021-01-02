@@ -28,7 +28,6 @@
         665402020169252884
     ],
     "special_roles": {
-        "channel": null,
         "message": null,
         "emoji": {
             "<:100:793991559724400660>": {
@@ -46,7 +45,6 @@
         }
     },
     "pronoun_roles": {
-        "channel": null,
         "message": null,
         "emoji": {
             "<:he:793991598936948778>": 793992115880329227,
