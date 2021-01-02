@@ -71,7 +71,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             self.bot.settings["nicknames"]["opted_out"].remove(ctx.author.id)
         except ValueError:
             pass # it's fine if the were already opted in
-        await ctx.send(f"{ctx.author.mention} Opted in to craziness.")
+        await ctx.send(f"{ctx.author.mention} Opted in to craziness. Use the `<optout>` command to opt out.")
     
     @commands.command()
     async def optout(self, ctx: commands.Context):
@@ -83,7 +83,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             pass # it's fine if they were already opted out
         else:
             self.bot.settings["nicknames"]["opted_out"].append(ctx.author.id)
-        await ctx.send(f"{ctx.author.mention} Opted out from craziness.")
+        await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the `<optin>` command to opt back in.")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -96,17 +96,27 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         if flag is not None:
             if message.author.id not in self.bot.settings["nicknames"]["opted_out"]:
                 nick = message.content.replace(flag, "", 1).strip().replace("\n", " ")
-                if len(nick) == 0:
+                if len(nick) == 0 or len(nick) > 128:
                     return
                 clean_backtick = "\u200b`\u200b"
+                if nick.count("||") >= 2: # don't reveal spoilers
+                    return
                 if len(nick) > 32:
-                    return await message.channel.send(f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> ``{nick.replace('`', clean_backtick)}`` (that nickname is too long!)")
+                    return await message.channel.send(
+                        f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \
+                        "``{nick.replace('`', clean_backtick)}`` (that nickname is too long!) " + \
+                        "*Use the `<optout>` command to hide me.*"
+                    )
                 try:
                     await message.author.edit(nick=nick)
-                    await message.channel.send(f"{message.author.mention} <a:is:793742253452558356> ``{nick.replace('`', clean_backtick)}``")
+                    await message.channel.send(
+                        f"{message.author.mention} <a:is:793742253452558356> ``{nick.replace('`', clean_backtick)}`` " + \
+                        "*Use the `<optout>` command to hide me.*"
+                        )
                 except discord.Forbidden:
                     await message.channel.send("I can't change your nickname! " + \
-                        "Do I have permissions to do so, or is your role above mine (or are you the server owner)?")
+                        "Do I have permissions to do so, or is your role above mine (or are you the server owner)?"
+                    )
 
 def setup(bot):
     bot.add_cog(KekeIsMove(bot))

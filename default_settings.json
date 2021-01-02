@@ -56,7 +56,7 @@
         }
     },
     "nicknames": {
-        "enabled": true,
+        "enabled": false,
         "opted_out": []
     }
 }
