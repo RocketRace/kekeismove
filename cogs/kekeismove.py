@@ -87,6 +87,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        if message.guild is None: return
         if not self.bot.settings["nicknames"]["enabled"]: return
         flag = None
         for x in ("i'm ", "I'm ", "im ", "Im ", "i am ", "I am "):
