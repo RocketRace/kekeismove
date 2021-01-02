@@ -113,14 +113,15 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     )
                 try:
                     await message.author.edit(nick=nick)
-                    await message.channel.send(
-                        f"{message.author.mention} <a:is:793742253452558356> ``{nick.replace('`', clean_backtick)}``\n" + \
-                        "*Use the `<optout>` command to hide me.*"
-                        )
                 except discord.Forbidden:
                     await message.channel.send("I can't change your nickname! " + \
                         "Do I have permissions to do so, or is your role above mine (or are you the server owner)?"
                     )
+                else:
+                    await message.channel.send(
+                        f"{message.author.mention} <a:is:793742253452558356> ``{nick.replace('`', clean_backtick)}``\n" + \
+                        "*Use the `<optout>` command to hide me.*"
+                        )
 
 def setup(bot):
     bot.add_cog(KekeIsMove(bot))

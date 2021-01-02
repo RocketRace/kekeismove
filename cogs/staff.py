@@ -189,12 +189,14 @@ class Staff(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+        if payload.user_id == self.bot.user.id: return
         member = payload.member # only works for raw_reaction_add, not raw_reaction_remove because discord
         guild = self.bot.get_guild(payload.guild_id)
+        emoji = str(payload.emoji).replace("<a:", "<:") if payload.emoji.animated else str(payload.emoji)
         for _ in range(1):
             if payload.channel_id != self.bot.settings["special_roles"]["channel"]: break
             if payload.message_id != self.bot.settings["special_roles"]["message"]: break
-            roles = self.bot.settings["special_roles"]["emoji"].get(str(payload.emoji))
+            roles = self.bot.settings["special_roles"]["emoji"].get(emoji)
             if roles is None: break
             colored = guild.get_role(roles["colored"])
             colorless = guild.get_role(roles["colorless"])
@@ -203,7 +205,7 @@ class Staff(commands.Cog):
                     await member.add_roles(colored)
         if payload.channel_id != self.bot.settings["pronoun_roles"]["channel"]: return
         if payload.message_id != self.bot.settings["pronoun_roles"]["message"]: return
-        role_id = self.bot.settings["pronoun_roles"]["emoji"].get(str(payload.emoji))
+        role_id = self.bot.settings["pronoun_roles"]["emoji"].get(emoji)
         if role_id is None: return
         role = guild.get_role(role_id)
         if role not in member.roles:
@@ -212,13 +214,13 @@ class Staff(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload: discord.RawReactionActionEvent):
         # why must I make such a mess
-        print(payload)
         guild = self.bot.get_guild(payload.guild_id)
         member = guild.get_member(payload.user_id)
+        emoji = str(payload.emoji).replace("<a:", "<:") if payload.emoji.animated else str(payload.emoji)
         for _ in range(1): # goto but not really
             if payload.channel_id != self.bot.settings["special_roles"]["channel"]: break
             if payload.message_id != self.bot.settings["special_roles"]["message"]: break
-            roles = self.bot.settings["special_roles"]["emoji"].get(str(payload.emoji))
+            roles = self.bot.settings["special_roles"]["emoji"][emoji]
             if roles is None: break
             colored = guild.get_role(roles["colored"])
             colorless = guild.get_role(roles["colorless"])
@@ -227,7 +229,7 @@ class Staff(commands.Cog):
                     await member.remove_roles(colored)
         if payload.channel_id != self.bot.settings["pronoun_roles"]["channel"]: return
         if payload.message_id != self.bot.settings["pronoun_roles"]["message"]: return
-        role_id = self.bot.settings["pronoun_roles"]["emoji"].get(str(payload.emoji))
+        role_id = self.bot.settings["pronoun_roles"]["emoji"].get(emoji)
         if role_id is None: return
         role = guild.get_role(role_id)
         if role in member.roles:
