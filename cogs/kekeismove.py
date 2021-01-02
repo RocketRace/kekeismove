@@ -105,12 +105,13 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     return await message.channel.send(
                         f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \
                         f"||``{nick.replace('`', clean_backtick).replace('|','')}``|| (that nickname has spoilers!)\n" + \
-                        "*Use the `<optout>` command to hide me.*")
+                        f"*Use the ``{self.bot.settings['prefixes'][0]}optout`` command to hide me.*"
+                    )
                 if len(nick) > 32:
                     return await message.channel.send(
                         f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \
                         f"``{nick.replace('`', clean_backtick)}`` (that nickname is too long!)\n" + \
-                        "*Use the `<optout>` command to hide me.*"
+                        f"*Use the ``{self.bot.settings['prefixes'][0]}optout`` command to hide me.*"
                     )
                 try:
                     await message.author.edit(nick=nick)
