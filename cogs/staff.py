@@ -180,7 +180,7 @@ class Staff(commands.Cog):
         if payload.user_id == self.bot.user.id: return
         member = payload.member # only works for raw_reaction_add, not raw_reaction_remove because discord
         guild = self.bot.get_guild(payload.guild_id)
-        emoji = str(payload.emoji).replace("<a:", "<:") if payload.emoji.animated else str(payload.emoji)
+        emoji = str(payload.emoji).replace("<:", "<a:") # for some reason, discord does not provide the right data
         for _ in range(1):
             if payload.message_id != self.bot.settings["special_roles"]["message"]: break
             roles = self.bot.settings["special_roles"]["emoji"].get(emoji)
@@ -202,7 +202,7 @@ class Staff(commands.Cog):
         # why must I make such a mess
         guild = self.bot.get_guild(payload.guild_id)
         member = guild.get_member(payload.user_id)
-        emoji = str(payload.emoji).replace("<a:", "<:") if payload.emoji.animated else str(payload.emoji)
+        emoji = str(payload.emoji).replace("<:", "<a:") # for some reason, discord does not provide the right data
         for _ in range(1): # goto but not really
             if payload.message_id != self.bot.settings["special_roles"]["message"]: break
             roles = self.bot.settings["special_roles"]["emoji"].get(emoji)
