@@ -114,6 +114,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     )
                 try:
                     await message.author.edit(nick=nick)
+                    self.bot.settings["stats"]["nicknames"] += 1
                 except discord.Forbidden:
                     await message.channel.send("I can't change your nickname! " + \
                         "Do I have permissions to do so, or is your role above mine (or are you the server owner)?"

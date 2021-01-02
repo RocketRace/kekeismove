@@ -65,18 +65,6 @@ class Settings(commands.Cog):
         embed.add_field(name="Prefixes", value=f"`{ctx.me}`\n" + "\n".join(f"`{p}`" for p in self.bot.settings["prefixes"]))
         embed.add_field(name="Commands", value=f"{len(self.bot.settings['disabled_commands'])} disabled")
         embed.add_field(name="Ranks", value=f"{len(self.bot.settings['ranks'])} set")
-        channel_id = self.bot.settings['special_roles']['channel']
-        if channel_id:
-            try:
-                channel = ctx.guild.get_channel(channel_id) # TODO handle channel... being invalid?
-                message_id = self.bot.settings['special_roles']['message']
-                message = await channel.fetch_message(message_id) # TODO handle message being invalid
-                message_position = f"{mention(channel_id)} / {message} ([{message.jump_url}](Jump))"
-            except AttributeError:
-                raise MissingReactionRole
-        else:
-            message_position = "Not set"
-        embed.add_field(name="Reaction role", value=message_position)
         enabled = 'enabled' if self.bot.settings['nicknames']['enabled'] else 'disabled'
         opted_out = len(self.bot.settings['nicknames']['opted_out'])
         embed.add_field(name="Nicknames", value=f"Auto-changes {enabled}\n`{opted_out}` members opted out")

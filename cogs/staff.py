@@ -36,7 +36,7 @@ class Staff(commands.Cog):
                 for emoji, role in self.bot.settings["special_roles"]["emoji"].items()
             ],
             *[
-                f"- ({emoji}) {mention(role)}: `{count(role['colorless'])}` members"
+                f"- ({emoji}) {mention(role)}: `{count(role)}` members"
                 for emoji, role in self.bot.settings["pronoun_roles"]["emoji"].items()
             ],
             f"- {mention(self.bot.settings['staff_role'])}: `{count(self.bot.settings['staff_role'])}` members",
