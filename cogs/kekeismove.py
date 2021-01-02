@@ -100,6 +100,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                 if len(nick) == 0 or len(nick) > 128:
                     return
                 clean_backtick = "\u200b`\u200b"
+                if not message.channel.permissions_for(message.guild.me).send_messages: return
                 if nick.count("||") >= 2: # don't reveal spoilers
                     return await message.channel.send(
                         f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \

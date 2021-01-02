@@ -35,6 +35,10 @@ class Staff(commands.Cog):
                 f"- ({emoji}) {mention(role['colorless'])}: `{count(role['colorless'])}` members, {mention(role['colored'])}: `{count(role['colored'])}` members"
                 for emoji, role in self.bot.settings["special_roles"]["emoji"].items()
             ],
+            *[
+                f"- ({emoji}) {mention(role)}: `{count(role['colorless'])}` members"
+                for emoji, role in self.bot.settings["pronoun_roles"]["emoji"].items()
+            ],
             f"- {mention(self.bot.settings['staff_role'])}: `{count(self.bot.settings['staff_role'])}` members",
             f"- {mention(self.bot.settings['contribute_role'])}: `{count(self.bot.settings['contribute_role'])}` members",
             f"- {mention(self.bot.settings['nitro_role'])}: `{count(self.bot.settings['nitro_role'])}` members"
@@ -115,14 +119,8 @@ class Staff(commands.Cog):
         '''Manage and check special reaction roles'''
         mention = mention_role(ctx)
 
-        reaction_channel = ctx.guild.get_channel(self.bot.settings["special_roles"]["channel"])
-        if reaction_channel is not None:
-            reaction_message = await reaction_channel.fetch_message(self.bot.settings["special_roles"]["message"])
-            jump_link = f"[Jump to message]({reaction_message.jump_url})"
-        else:
-            jump_link = "Not set"
         embed = discord.Embed(title="Reaction Roles", color=self.bot.settings["color"])
-        embed.add_field(name="Reaction message", value=jump_link)
+        embed.add_field(name="Message", value=str(self.bot.settings["special_roles"]["message"]))
         embed.add_field(name="Roles", value="\n".join(
             f"({emoji}): {mention(role['colorless'])} / {mention(role['colored'])}"
             for emoji, role in self.bot.settings["special_roles"]["emoji"].items())
@@ -138,14 +136,12 @@ class Staff(commands.Cog):
         '''
         for emoji in self.bot.settings["special_roles"]["emoji"]:
             await message.add_reaction(emoji)
-        self.bot.settings["special_roles"]["channel"] = message.channel.id
         self.bot.settings["special_roles"]["message"] = message.id
         await ctx.send(f"The special reaction role message has been updated to the following message:\n<{message.jump_url}>.")
     
     @special_roles.command(name="unset")
     async def unset_special(self, ctx: commands.Context):
         '''Disables the current special reaction role message'''
-        self.bot.settings["special_roles"]["channel"] = None
         self.bot.settings["special_roles"]["message"] = None
         await ctx.send(f"The special reaction role message has been unset.")
 
@@ -154,14 +150,8 @@ class Staff(commands.Cog):
         '''Manage and check pronoun reaction roles'''
         mention = mention_role(ctx)
 
-        reaction_channel = ctx.guild.get_channel(self.bot.settings["pronoun_roles"]["channel"])
-        if reaction_channel is not None:
-            reaction_message = await reaction_channel.fetch_message(self.bot.settings["pronoun_roles"]["message"])
-            jump_link = f"[Jump to message]({reaction_message.jump_url})"
-        else:
-            jump_link = "Not set"
         embed = discord.Embed(title="Reaction Roles", color=self.bot.settings["color"])
-        embed.add_field(name="Reaction message", value=jump_link)
+        embed.add_field(name="Reaction message", value=str(self.bot.setttings["pronoun_roles"]["message"]))
         embed.add_field(name="Roles", value="\n".join(
             f"({emoji}): {mention(role)}" for emoji, role in self.bot.settings["pronoun_roles"]["emoji"].items())
         )
