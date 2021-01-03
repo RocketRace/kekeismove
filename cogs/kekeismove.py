@@ -47,7 +47,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         if isinstance(err, BadHierarchy):
             await ctx.send("That role is above mine! I don't have permissions to give it to you :(")
         elif isinstance(getattr(err, "original", err), commands.RoleNotFound):
-            await ctx.send("That's not a valid self-assignable role. See the <ranks> command for a list.")
+            await ctx.send(f"That's not a valid self-assignable role. See the ``{ctx.prefix}ranks`` command for a list.")
         elif isinstance(err, commands.MissingRequiredArgument):
             await ctx.send("<rank> is a required argument that's missing! It should be the ping, ID or name of a self-assignable role.")
 
@@ -67,24 +67,24 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         
         You can opt out using the <optout> command.
         '''
-        try:
-            self.bot.settings["nicknames"]["opted_out"].remove(ctx.author.id)
-        except ValueError:
-            pass # it's fine if the were already opted in
-        await ctx.send(f"{ctx.author.mention} Opted in to craziness. Use the `<optout>` command to opt out.")
-    
+        if ctx.author.id in self.bot.settings["nicknames"]["opted_in"]:
+            pass # it's fine if they were already opted in
+        else:
+            self.bot.settings["nicknames"]["opted_in"].append(ctx.author.id)
+        await ctx.send(f"{ctx.author.mention} Opted in to craziness. Use the ``{ctx.prefix}optout`` command to opt out.")
+
     @commands.command()
     async def optout(self, ctx: commands.Context):
         '''Opts out of nickname changing
         
         You can opt back in using the <optin> command.
         '''
-        if ctx.author.id in self.bot.settings["nicknames"]["opted_out"]:
-            pass # it's fine if they were already opted out
-        else:
-            self.bot.settings["nicknames"]["opted_out"].append(ctx.author.id)
-        await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the `<optin>` command to opt back in.")
-
+        try:
+            self.bot.settings["nicknames"]["opted_in"].remove(ctx.author.id)
+        except ValueError:
+            pass # it's fine if the were already opted out
+        await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the ```{ctx.prefix}optin`` command to opt back in.")
+    
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.guild is None: return
@@ -95,7 +95,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                 flag = x
                 break
         if flag is not None:
-            if message.author.id not in self.bot.settings["nicknames"]["opted_out"]:
+            if message.author.id in self.bot.settings["nicknames"]["opted_in"]:
                 nick = message.content.replace(flag, "", 1).strip().replace("\n", " ")
                 if len(nick) == 0 or len(nick) > 128:
                     return

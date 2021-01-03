@@ -1,6 +1,6 @@
 {
     "prefixes": [
-        "="
+        "!"
     ],
     "color": 15029051,
     "disabled_commands": [],
@@ -55,6 +55,6 @@
     },
     "nicknames": {
         "enabled": false,
-        "opted_out": []
+        "opted_in": []
     }
 }

@@ -46,7 +46,7 @@ class Staff(commands.Cog):
         embed.add_field(name="Bot", inline=False, value="\n".join([
             f"- `{self.bot.settings['stats']['commands']}` commands run",
             f"- `{self.bot.settings['stats']['nicknames']}` nicknames changed",
-            f"- `{len(self.bot.settings['nicknames']['opted_out'])}` people opted out from nickname changes"
+            f"- `{len(self.bot.settings['nicknames']['opted_in'])}` people opted in to nickname changes"
         ]))
 
         await ctx.send(embed=embed)

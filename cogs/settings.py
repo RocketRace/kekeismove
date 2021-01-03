@@ -42,7 +42,7 @@ class Settings(commands.Cog):
             obj["pronoun_roles"]["message"]
             obj["pronoun_roles"]["emoji"]
             obj["nicknames"]["enabled"]
-            obj["nicknames"]["opted_out"]
+            obj["nicknames"]["opted_in"]
         except (KeyError, TypeError) as err:
             raise BadSettings(*err.args)
         return obj
@@ -66,8 +66,8 @@ class Settings(commands.Cog):
         embed.add_field(name="Commands", value=f"{len(self.bot.settings['disabled_commands'])} disabled")
         embed.add_field(name="Ranks", value=f"{len(self.bot.settings['ranks'])} set")
         enabled = 'enabled' if self.bot.settings['nicknames']['enabled'] else 'disabled'
-        opted_out = len(self.bot.settings['nicknames']['opted_out'])
-        embed.add_field(name="Nicknames", value=f"Auto-changes {enabled}\n`{opted_out}` members opted out")
+        opted_in = len(self.bot.settings['nicknames']['opted_in'])
+        embed.add_field(name="Nicknames", value=f"Auto-changes {enabled}\n`{opted_in}` members opted in")
         embed.set_footer(text="See the <export> command for more detailed information.")
         await ctx.send(embed=embed)
 
