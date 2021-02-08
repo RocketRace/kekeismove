@@ -10,11 +10,14 @@ from cogs.errors import *
 class Staff(commands.Cog):
     '''Utility commands and role setup for staff members.'''
 
+    session: aiohttp.ClientSession
+
     def __init__(self, bot: commands.Bot):
+        bot.loop.create_task(self.initialize())
         self.bot = bot
 
     async def initialize(self):
-        self.session = await aiohttp.ClientSession()
+        self.session = aiohttp.ClientSession()
 
     async def on_cog_unload(self):
         await self.session.close()
@@ -236,7 +239,7 @@ class Staff(commands.Cog):
         if role in member.roles:
             await member.remove_roles(role)
     
-    LEVEL_CODE_REGEX = re.compile(r"[0-9A-Z]{4}\-[0-9A-Z]{4}")
+    LEVEL_CODE_REGEX = re.compile(r"[0-9A-Z]{4}-[0-9A-Z]{4}")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -246,7 +249,10 @@ class Staff(commands.Cog):
         if not codes:
             return
         for code in codes:
-            async with self.session.get(f"https://baba-is-bookmark.herokuapp.com/api/level/?code={code}") as resp:
+            async with self.session.post(
+                f"https://baba-is-bookmark.herokuapp.com/api/level/",
+                json={"code":code}
+            ) as resp:
                 pass
                 # might do something with response later
 
