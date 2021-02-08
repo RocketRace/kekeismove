@@ -56,5 +56,9 @@
     "nicknames": {
         "enabled": false,
         "opted_in": []
+    },
+    "uploads": {
+        "enabled": true,
+        "channel": 787772546954035270
     }
 }

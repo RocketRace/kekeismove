@@ -32,9 +32,12 @@ class Settings(commands.Cog):
             for field in (
                 "prefixes", "color", "disabled_commands", "stats", 
                 "server", "staff_role", "contribute_role", "nitro_role",
-                "ranks", "special_roles", "pronoun_roles", "nicknames"
+                "ranks", "special_roles", "pronoun_roles", "nicknames",
+                "uploads"
             ):
                 obj[field]
+            obj["uploads"]["enabled"]
+            obj["uploads"]["channel"]
             obj["stats"]["commands"]
             obj["stats"]["nicknames"]
             obj["special_roles"]["message"]
@@ -68,6 +71,8 @@ class Settings(commands.Cog):
         enabled = 'enabled' if self.bot.settings['nicknames']['enabled'] else 'disabled'
         opted_in = len(self.bot.settings['nicknames']['opted_in'])
         embed.add_field(name="Nicknames", value=f"Auto-changes {enabled}\n`{opted_in}` members opted in")
+        enabled = 'enabled' if self.bot.settings['uploads']['enabled'] else 'disabled'
+        embed.add_field(name="Auto-uploads", value=f"Auto-uploads {enabled}")
         embed.set_footer(text="See the <export> command for more detailed information.")
         await ctx.send(embed=embed)
 

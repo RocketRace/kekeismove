@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from asyncio.events import get_running_loop
+import re
+import aiohttp
 from discord.ext import commands
 import discord
 from cogs.utils import *
@@ -11,6 +12,12 @@ class Staff(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+
+    async def initialize(self):
+        self.session = await aiohttp.ClientSession()
+
+    async def on_cog_unload(self):
+        await self.session.close()
 
     async def cog_check(self, ctx):
         return await has_staff_permissions(ctx)
@@ -113,6 +120,16 @@ class Staff(commands.Cog):
         '''Disables automatic nickname changes'''
         self.bot.settings["nicknames"]["enabled"] = False
         await ctx.send("Nickname craziness disabled.")
+    
+    @commands.command(name="enableuploads")
+    async def enable_uploads(self, ctx: commands.Context):
+        '''Enables automatic level code uploads to the baba-is-bookmark website.'''
+        self.bot.settings["uploads"]["enabled"] = True
+    
+    @commands.command(name="disableuploads")
+    async def disable_uploads(self, ctx: commands.Context):
+        '''Disables automatic level code uploads to the baba-is-bookmark website.'''
+        self.bot.settings["uploads"]["enabled"] = False
 
     @commands.group(name="specialroles", aliases=["sr"], invoke_without_command=True)
     async def special_roles(self, ctx: commands.Context):
@@ -218,6 +235,20 @@ class Staff(commands.Cog):
         role = guild.get_role(role_id)
         if role in member.roles:
             await member.remove_roles(role)
+    
+    LEVEL_CODE_REGEX = re.compile(r"[0-9A-Z]{4}\-[0-9A-Z]{4}")
+
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        if message.channel.id != self.bot.settings["uploads"]["channel"]:
+            return
+        codes = re.findall(self.LEVEL_CODE_REGEX, message.content)
+        if not codes:
+            return
+        for code in codes:
+            async with self.session.get(f"https://baba-is-bookmark.herokuapp.com/api/level/?code={code}") as resp:
+                pass
+                # might do something with response later
 
 def setup(bot):
     bot.add_cog(Staff(bot))
