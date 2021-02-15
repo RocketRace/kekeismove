@@ -253,6 +253,7 @@ class Staff(commands.Cog):
                 f"https://baba-is-bookmark.herokuapp.com/api/level/",
                 json={"code":code}
             ) as resp:
+                print(f"Uploaded code {code} from {message.id}.")
                 pass
                 # might do something with response later
 

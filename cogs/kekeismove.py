@@ -90,21 +90,21 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         if message.guild is None: return
         if not self.bot.settings["nicknames"]["enabled"]: return
         flag = None
-        for x in ("i'm ", "I'm ", "im ", "Im ", "i am ", "I am "):
+        for x in ("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m "):
             if message.content.startswith(x):
                 flag = x
                 break
         if flag is not None:
             if message.author.id in self.bot.settings["nicknames"]["opted_in"]:
-                nick = message.content.replace(flag, "", 1).strip().replace("\n", " ")
+                nick = message.content.split(flag, 1)[1].replace("\n", " ")
                 if len(nick) == 0 or len(nick) > 128:
                     return
-                clean_backtick = "\u200b`\u200b"
+                clean_backtick = "\u200b`"
                 if not message.channel.permissions_for(message.guild.me).send_messages: return
                 if nick.count("||") >= 2: # don't reveal spoilers
                     return await message.channel.send(
                         f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " + \
-                        f"||``{nick.replace('`', clean_backtick).replace('|','')}``|| (that nickname has spoilers!)\n" + \
+                        f"||``\u200b{nick.replace('`', clean_backtick).replace('|','')}\u200b``|| (that nickname has spoilers!)\n" + \
                         f"*Use the ``{self.bot.settings['prefixes'][0]}optout`` command to hide me.*"
                     )
                 if len(nick) > 32:
