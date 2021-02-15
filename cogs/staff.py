@@ -241,10 +241,7 @@ class Staff(commands.Cog):
     
     LEVEL_CODE_REGEX = re.compile(r"[0-9A-Z]{4}-[0-9A-Z]{4}")
 
-    @commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
-        if message.channel.id != self.bot.settings["uploads"]["channel"]:
-            return
+    async def upload_codes(self, message: discord.Message):
         codes = re.findall(self.LEVEL_CODE_REGEX, message.content)
         if not codes:
             return
@@ -256,6 +253,21 @@ class Staff(commands.Cog):
                 print(f"Uploaded code {code} from {message.id}.")
                 pass
                 # might do something with response later
+
+    @commands.Cog.listener()
+    async def on_message(self, message: discord.Message):
+        if message.channel.id != self.bot.settings["uploads"]["channel"]:
+            return
+        await self.upload_codes(message)
+    
+    @commands.Cog.listener()
+    async def on_raw_message_edit(self, payload: discord.RawMessageUpdateEvent):
+        if payload.channel_id != self.bot.settings["uploads"]["channel"]:
+            return
+        channel = self.bot.get_channel(payload.channel_id)
+        assert channel is not None
+        message = await channel.fetch_message(payload.message_id)
+        await self.upload_codes(message)
 
 def setup(bot):
     bot.add_cog(Staff(bot))
