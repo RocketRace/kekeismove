@@ -83,7 +83,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             self.bot.settings["nicknames"]["opted_in"].remove(ctx.author.id)
         except ValueError:
             pass # it's fine if the were already opted out
-        await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the ```{ctx.prefix}optin`` command to opt back in.")
+        await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the ``{ctx.prefix}optin`` command to opt back in.")
     
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

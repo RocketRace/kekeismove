@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import io
 from discord.ext import commands
 import discord
 import traceback
@@ -59,6 +60,23 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     async def exit_(self, ctx: commands.Context):
         await ctx.send("Exiting...")
         await self.bot.close()
+
+    @commands.command()
+    async def dev(self, ctx: commands.Context, *, content: str):
+        import contextlib
+        buf = io.StringIO()
+        coro = '''async def _():\n{}'''
+        code = coro.format("    " + content.replace('\n', '\n    '))
+        with contextlib.redirect_stdout(buf):
+            try:
+                glob = globals()
+                glob['ctx'] = ctx
+                exec(code, glob)
+                await glob['_']()
+            except Exception as e:
+                await ctx.send('```' + ''.join(traceback.format_exception(type(e), e, e.__traceback__))[:1994] + '```')
+            else:
+                await ctx.send(f"Success. Output:\n```\n{buf.getvalue()}\n```"[:2000])
 
 def setup(bot):
     bot.add_cog(Admin(bot))
