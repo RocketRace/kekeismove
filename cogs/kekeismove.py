@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from discord.ext import commands
+import random
 import discord
+from discord.ext import commands
 from cogs.errors import *
 
 class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
@@ -39,6 +40,22 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             pass # it's fine if the were already opted out
         await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the ``{ctx.prefix}optin`` command to opt back in.")
     
+    @commands.command()
+    async def count(self, ctx: commands.Context):
+        '''How many nicknames have I changed?'''
+        options = [
+            "I've annoyed {} people!",
+            "I've changed {} nicknames!",
+            "I've made someone roll their eyes {} times!",
+            "I've changed someone's nickname {} times!",
+            "I've made a pun {} times!",
+            "I've made a bad pun {} times!",
+            "I've done this {} times!",
+            "I've disappointed people {} times!",
+            "I've interrupted the conversation {} times!",
+        ]
+        await ctx.send(random.choice(options).format(self.bot.nicknames_changed))
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.guild is None: return
