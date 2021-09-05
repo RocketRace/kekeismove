@@ -2,7 +2,6 @@
 
 from discord.ext import commands
 import discord
-from cogs.utils import *
 from cogs.errors import *
 
 class Staff(commands.Cog):
@@ -11,10 +10,8 @@ class Staff(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    async def cog_check(self, ctx):
-        return await has_staff_permissions(ctx)
-
     @commands.command()
+    @commands.is_owner()
     async def say(self, ctx: commands.Context, channel: discord.TextChannel, *, message: str):
         '''Echoes a message in a different channel
         
@@ -34,12 +31,14 @@ class Staff(commands.Cog):
             await ctx.send("Bad argument provided. The <channel> argument should be a channel mention, channel ID or channel name.")
 
     @commands.command(name="enablenicknames")
+    @commands.is_owner()
     async def enable_nicknames(self, ctx: commands.Context):
         '''Enables automatic nickname changes'''
         self.bot.enabled = True
         await ctx.send("Nickname craziness enabled.")
     
     @commands.command(name="disablenicknames")
+    @commands.is_owner()
     async def dis_nicknames(self, ctx: commands.Context):
         '''Disables automatic nickname changes'''
         self.bot.enabled = False

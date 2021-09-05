@@ -9,7 +9,7 @@ class EmbedHelp(commands.DefaultHelpCommand):
     async def send_pages(self):
         destination = self.get_destination()
         for page in self.paginator.pages:
-            embed = discord.Embed(title="Help command", color=self.context.bot.settings["color"], description=page)
+            embed = discord.Embed(title="Help command", color=0, description=page)
             await destination.send(embed=embed)
 
 class Admin(commands.Cog, command_attrs=dict(hidden=True)):

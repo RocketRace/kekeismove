@@ -2,7 +2,6 @@
 
 from discord.ext import commands
 import discord
-from cogs.utils import *
 from cogs.errors import *
 
 class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
