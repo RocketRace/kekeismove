@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import io
-from discord.ext import commands
-import discord
 import traceback
+
+import discord
+from discord.ext import commands
+
+from bot import Bot
+
 
 class EmbedHelp(commands.DefaultHelpCommand):
     async def send_pages(self):
@@ -15,7 +19,7 @@ class EmbedHelp(commands.DefaultHelpCommand):
 class Admin(commands.Cog, command_attrs=dict(hidden=True)):
     '''Bot administration'''
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: Bot):
         self.bot = bot
         self._original = bot.help_command
         bot.help_command = EmbedHelp()

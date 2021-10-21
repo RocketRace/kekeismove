@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from discord.ext import commands
 import discord
+from discord.ext import commands
+
 from cogs.errors import *
+
+from bot import Bot
+
 
 class Staff(commands.Cog):
     '''Utility commands and role setup for staff members.'''
 
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: Bot):
         self.bot = bot
 
     @commands.command()
@@ -34,14 +38,14 @@ class Staff(commands.Cog):
     @commands.is_owner()
     async def enable_nicknames(self, ctx: commands.Context):
         '''Enables automatic nickname changes'''
-        self.bot.enabled = True
+        self.bot.nicknames_enabled = True
         await ctx.send("Nickname craziness enabled.")
     
     @commands.command(name="disablenicknames")
     @commands.is_owner()
     async def dis_nicknames(self, ctx: commands.Context):
         '''Disables automatic nickname changes'''
-        self.bot.enabled = False
+        self.bot.nicknames_enabled = False
         await ctx.send("Nickname craziness disabled.")
 
 def setup(bot):

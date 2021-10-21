@@ -1,5 +1,6 @@
 from discord.ext import commands
 
+
 class KekeException(commands.CommandError): 
     '''Common base class for bot exceptions'''
 
