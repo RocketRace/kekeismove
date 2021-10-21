@@ -78,12 +78,12 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
             not message.channel.permissions_for(message.guild.me).send_messages
         ):
             return
-        
+
         match = self.I_AM_PREFIXES.match(message.content)
         if match is None:
             return
 
-        nick = message.content.replace(match.string, "", 1).replace("\n", " ")
+        nick = re.sub(self.I_AM_PREFIXES, "", message.content, 1).replace("\n", " ")
         if len(nick) == 0 or len(nick) > 128:
             return
         
