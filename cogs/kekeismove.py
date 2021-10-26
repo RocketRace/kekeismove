@@ -68,6 +68,12 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
         ]
         await ctx.send(random.choice(options).format(self.bot.nicknames_changed))
 
+    @commands.command()
+    async def icons(self, ctx: commands.Context):
+        '''Gives a list of icons you can use'''
+        lines = "\n".join(name for name in self.bot.object_roles)
+        await ctx.send(embed=discord.Embed(color=15029051, description=lines))
+
     I_AM_PREFIXES = re.compile("|".join(("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m ")))
     
     async def nickname_change(self, message: discord.Message):
