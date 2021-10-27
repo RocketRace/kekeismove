@@ -163,7 +163,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     f"{message.author.mention}" 
                     "<a:is:793742253452558356>" 
                     "<a:not:793742269848354856>"
-                    f"{inline_codeblock(tile).upper()} (that isn't a rank!)"
+                    f"{inline_codeblock(tile).upper()} (that isn't an icon I know!)"
                 )
             else:
                 return await message.channel.send(
@@ -171,7 +171,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     "<a:is:793742253452558356>" 
                     "<a:not:793742269848354856>"
                     "<a:not:793742269848354856>"
-                    f"{inline_codeblock(tile).upper()} (that isn't a rank!)"
+                    f"{inline_codeblock(tile).upper()} (that isn't an icon I know)"
                 )
 
         role_id, emoji_id = self.bot.object_roles[tile]
