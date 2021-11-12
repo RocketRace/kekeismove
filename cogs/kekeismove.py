@@ -71,8 +71,17 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
     @commands.command()
     async def icons(self, ctx: commands.Context):
         '''Gives a list of icons you can use'''
-        lines = "\n".join(name for name in self.bot.object_roles)
-        await ctx.send(embed=discord.Embed(color=15029051, description=lines))
+        lines = "\n".join(
+            f"<a:{name}:{emoji_id}> <@&{role_id}>" 
+            for name, [role_id, emoji_id] in self.bot.object_roles.items()
+        )
+        await ctx.send(
+            embed=discord.Embed(
+                color=15029051, 
+                title="Icons", 
+                description=lines
+            )
+        )
 
     I_AM_PREFIXES = re.compile("|".join(("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m ")))
     
