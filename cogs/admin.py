@@ -82,5 +82,11 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
             else:
                 await ctx.send(f"Success. Output:\n```\n{buf.getvalue()}\n```"[:2000])
 
+    @commands.command(name="newicon")
+    async def new_icon(self, ctx: commands.Context, name: str, role: discord.Role, emoji: discord.Emoji):
+        self.bot.object_roles[name] = [role.id, emoji.id]
+        self.bot.save_settings()
+        await ctx.send("Added `name` icon")
+
 def setup(bot):
     bot.add_cog(Admin(bot))

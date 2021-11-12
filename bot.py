@@ -45,7 +45,7 @@ class Bot(commands.Bot):
         print(f"Logged on as {self.user} (ID: {self.user.id})")
         print(discord.utils.oauth_url(str(self.user.id) ,permissions=discord.Permissions(470150208)))
 
-    async def close(self):
+    def save_settings(self):
         obj = {
             "nicknames_changed": self.nicknames_changed,
             "opted_in": self.opted_in,
@@ -54,6 +54,9 @@ class Bot(commands.Bot):
             "objects": self.object_roles
         }
         json.dump(obj, open("settings.json", "w"))
+
+    async def close(self):
+        self.save_settings()
 
 intents = discord.Intents(
     guilds=True, # required for basic functions
