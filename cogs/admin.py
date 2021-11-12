@@ -90,7 +90,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         '''Registers a new icon'''
         self.bot.object_roles[name] = [role.id, emoji.id]
         self.bot.save_settings()
-        await ctx.send("Added `name` icon")
+        await ctx.send(f"Added `{name}` icon")
 
 def setup(bot):
     bot.add_cog(Admin(bot))
