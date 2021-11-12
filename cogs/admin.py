@@ -52,6 +52,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
 
     @commands.command()
     async def load(self, ctx: commands.Context, *cogs: str):
+        '''Load cogs'''
         if len(cogs) == 0:
             for cog in self.bot.cog_names:
                 self.bot.reload_extension(cog)
@@ -62,11 +63,13 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
 
     @commands.command(name="exit")
     async def exit_(self, ctx: commands.Context):
+        '''Bye bye!'''
         await ctx.send("Exiting...")
         await self.bot.close()
 
     @commands.command()
     async def dev(self, ctx: commands.Context, *, content: str):
+        '''Evals code'''
         import contextlib
         buf = io.StringIO()
         coro = '''async def _():\n{}'''
@@ -84,6 +87,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
 
     @commands.command(name="newicon")
     async def new_icon(self, ctx: commands.Context, name: str, role: discord.Role, emoji: discord.Emoji):
+        '''Registers a new icon'''
         self.bot.object_roles[name] = [role.id, emoji.id]
         self.bot.save_settings()
         await ctx.send("Added `name` icon")
