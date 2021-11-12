@@ -71,10 +71,8 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
     @commands.command()
     async def icons(self, ctx: commands.Context):
         '''Gives a list of icons you can use'''
-        lines = "\n".join(
-            f"<a:{name}:{emoji_id}> <@&{role_id}>" 
-            for name, [role_id, emoji_id] in self.bot.object_roles.items()
-        )
+        roles = sorted((name, f"<@&{role_id}>") for name, [role_id, _] in self.bot.object_roles.items())
+        lines = "\n".join(role for _, role in roles)
         await ctx.send(
             embed=discord.Embed(
                 color=15029051, 
