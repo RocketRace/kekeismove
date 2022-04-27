@@ -77,6 +77,7 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         with contextlib.redirect_stdout(buf):
             try:
                 glob = globals()
+                glob['self'] = self
                 glob['ctx'] = ctx
                 exec(code, glob)
                 await glob['_']()

@@ -189,16 +189,31 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
 
         try:
             if add:
+                object_ids = [
+                    id for [id, _] in self.bot.object_roles.values()
+                ]
+                held_roles = [
+                    role
+                    for role in message.author.roles
+                    if role.id in object_ids
+                ]
+                await author.remove_roles(*held_roles)
                 await author.add_roles(role)
+                await message.channel.send(
+                    f"{message.author.mention} <a:is:793742253452558356> <a:{tile}:{emoji_id}>"
+                )
             else:
                 await author.remove_roles(role)
+                await message.channel.send(
+                    f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> <a:{tile}:{emoji_id}>"
+                )
         except discord.Forbidden:
             if add:
                 return await message.channel.send(
                     f"{message.author.mention}" 
                     "<a:is:793742253452558356>" 
                     "<a:not:793742269848354856>"
-                    f"<a:{tile}:{emoji_id}> (I can't add roles to you due to permissions!)"
+                    f"<a:{tile}:{emoji_id}> (I can't edit your roles due to permissions!)"
                 )
             else:
                 return await message.channel.send(
@@ -206,17 +221,8 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     "<a:is:793742253452558356>" 
                     "<a:not:793742269848354856>"
                     "<a:not:793742269848354856>"
-                    f"<a:{tile}:{emoji_id}> (I can't add roles to you due to permissions!)"
-                )
-        else:
-            if add:
-                await message.channel.send(
-                    f"{message.author.mention} <a:is:793742253452558356> <a:{tile}:{emoji_id}>"
-                )
-            else:
-                await message.channel.send(
-                    f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> <a:{tile}:{emoji_id}>"
-                )
+                    f"<a:{tile}:{emoji_id}> (I can't edit your roles due to permissions!)"
+                )   
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

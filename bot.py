@@ -61,6 +61,7 @@ class Bot(commands.Bot):
 intents = discord.Intents(
     guilds=True, # required for basic functions
     guild_messages=True, # required for commands & rr
+    members=True, # required to keep track of icon roles
 )
 
 def get_prefix(bot, message):
