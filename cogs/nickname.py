@@ -10,6 +10,12 @@ from cogs.errors import *
 
 from bot import Bot
 
+def inline_codeblock(msg: str) -> str:
+    clean_backtick = "\u200b`"
+    clean = msg.replace("`", clean_backtick)
+    return f"``\u200b{clean}\u200b``"
+
+
 class NicknameCog(commands.Cog, name="Nicknames"):
     '''KEKE IS CHEEKY'''
 
