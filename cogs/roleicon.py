@@ -47,7 +47,7 @@ class RoleIconCog(commands.Cog, name="Role icons"):
             embed.add_field(
                 name=f"{i+1}-{i+10}",
                 value="\n".join(icons[i:i+10]),
-                inline=False
+                inline=True
             )
 
         await ctx.send(embed=embed)
