@@ -45,7 +45,7 @@ class RoleIconCog(commands.Cog, name="Role icons"):
         )
         for i in range(0, len(icons), 10):
             embed.add_field(
-                name=f"{i+1}-{i+10}",
+                name="\u200b",
                 value="\n".join(icons[i:i+10]),
                 inline=True
             )
