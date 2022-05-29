@@ -56,20 +56,6 @@ class NicknameCog(commands.Cog, name="Nicknames"):
         ]
         await ctx.send(random.choice(options).format(self.bot.nicknames_changed))
 
-    @commands.command()
-    async def icons(self, ctx: commands.Context):
-        '''Gives a list of icons you can use'''
-        roles = sorted((name, f"<@&{role_id}>") for name, [role_id, _] in self.bot.object_roles.items())
-        lines = "\n".join(role for _, role in roles)
-        await ctx.send(
-            embed=discord.Embed(
-                color=15029051, 
-                title="Icons", 
-                description=lines
-            )
-        )
-
-    I_AM_PREFIXES = re.compile("|".join(("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m ")))
     
     async def nickname_change(self, message: discord.Message):
         if (
