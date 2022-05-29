@@ -11,7 +11,6 @@ import config
 
 class RoleIcon(TypedDict):
     role_id: int
-    object_id: int
     text_id: int
 
 class Bot(commands.Bot):
