@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import random
 import re
 import unicodedata
 
@@ -11,124 +10,52 @@ from cogs.errors import *
 
 from bot import Bot
 
-
 def inline_codeblock(msg: str) -> str:
     clean_backtick = "\u200b`"
     clean = msg.replace("`", clean_backtick)
     return f"``\u200b{clean}\u200b``"
 
-class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
-    '''KEKE IS MOVE AND HELP
+class RoleIconCog(commands.Cog, name="Role icons"):
+    '''Self-assigned role icon management
 
-    SOMETIMES KEKE IS SLEEP
+    To give yourself a self-assigned role, type:
 
-    KEKE TRY BEST
+    `@yourname is someicon`
+    
+    To remove your self-assigned role, type:
+
+    `@yourname is not someicon`
     '''
 
     def __init__(self, bot: Bot):
         self.bot = bot
     
     @commands.command()
-    async def optin(self, ctx: commands.Context):
-        '''Opts in to nickname changing
-        
-        You can opt out using the <optout> command.
-        '''
-        if ctx.author.id in self.bot.opted_in:
-            pass # it's fine if they were already opted in
-        else:
-            self.bot.opted_in.append(ctx.author.id)
-        await ctx.send(f"{ctx.author.mention} Opted in to craziness. Use the ``{ctx.prefix}optout`` command to opt out.")
-
-    @commands.command()
-    async def optout(self, ctx: commands.Context):
-        '''Opts out of nickname changing
-        
-        You can opt back in using the <optin> command.
-        '''
-        try:
-            self.bot.opted_in.remove(ctx.author.id)
-        except ValueError:
-            pass # it's fine if the were already opted out
-        await ctx.send(f"{ctx.author.mention} Opted out from craziness. Use the ``{ctx.prefix}optin`` command to opt back in.")
-    
-    @commands.command()
-    async def count(self, ctx: commands.Context):
-        '''How many nicknames have I changed?'''
-        options = [
-            "I've annoyed people {} times!",
-            "I've changed {} nicknames!",
-            "I've made someone roll their eyes {} times!",
-            "I've changed someone's nickname {} times!",
-            "I've made a pun {} times!",
-            "I've made a bad pun {} times!",
-            "I've done this {} times!",
-            "I've disappointed people {} times!",
-            "I've interrupted the conversation {} times!",
-        ]
-        await ctx.send(random.choice(options).format(self.bot.nicknames_changed))
-
-    @commands.command()
     async def icons(self, ctx: commands.Context):
         '''Gives a list of icons you can use'''
-        roles = sorted((name, f"<@&{role_id}>") for name, [role_id, _] in self.bot.object_roles.items())
-        lines = "\n".join(role for _, role in roles)
-        await ctx.send(
-            embed=discord.Embed(
-                color=15029051, 
-                title="Icons", 
-                description=lines
-            )
+        embed = discord.Embed(
+            title="Role icons",
+            color=15029051,
+        ).set_footer(text="Use `@yourname is <icon>` to assign yourself a role icon")
+        
+        # 10 icons per field
+        icons = sorted(
+            f"<a:{name}:{icon['role_id']}>"
+            for name, icon in self.bot.object_roles.items()
         )
+        for i in range(0, len(icons), 10):
+            embed.add_field(
+                name=f"{i+1}-{i+10}",
+                value="\n".join(icons[i:i+10]),
+                inline=False
+            )
+
+        await ctx.send(embed=embed)
 
     I_AM_PREFIXES = re.compile("|".join(("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m ")))
     
-    async def nickname_change(self, message: discord.Message):
-        if (
-            message.guild is None or
-            not self.bot.nicknames_enabled or
-            message.author.id not in self.bot.opted_in or
-            not message.channel.permissions_for(message.guild.me).send_messages
-        ):
-            return
-
-        match = self.I_AM_PREFIXES.match(message.content)
-        if match is None:
-            return
-
-        nick = re.sub(self.I_AM_PREFIXES, "", message.content, 1).replace("\n", " ")
-        if len(nick) == 0 or len(nick) > 128:
-            return
-        
-        escaped = inline_codeblock(nick)
-
-        if nick.count("||") >= 2: # don't reveal spoilers
-            return await message.channel.send(
-                f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> "
-                f"||{escaped.replace('|', '')}|| (that nickname has spoilers!)\n"
-                f"*Use the ``!optout`` command to hide me.*"
-            )
-        if len(nick) > 32:
-            return await message.channel.send(
-                f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " 
-                f"{escaped} (that nickname is too long!)\n" 
-                f"*Use the ``!optout`` command to hide me.*"
-            )
-        try:
-            await message.author.edit(nick=nick)
-        except discord.Forbidden:
-            await message.channel.send("I can't change your nickname! " 
-                "Do I have permissions to do so, or is your role above mine (or are you the server owner)?"
-            )
-        else:
-            self.bot.nicknames_changed += 1
-            await message.channel.send(
-                f"{message.author.mention} <a:is:793742253452558356> {escaped}\n" 
-                f"*Use the ``!optout`` command to hide me.*"
-            )
-
     async def role_assign(self, message: discord.Message):
-        if not message.guild:
+        if not isinstance(message.author, discord.Member):
             return
         
         if not self.bot.roles_enabled:
@@ -181,7 +108,9 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
                     f"{inline_codeblock(tile).upper()} (that isn't an icon I know)"
                 )
 
-        role_id, emoji_id = self.bot.object_roles[tile]
+        role_icon = self.bot.object_roles[tile]
+        role_id = role_icon['role_id']
+        emoji_id = role_icon['text_id']
         
         role = message.guild.get_role(role_id)
         if role is None:
@@ -226,8 +155,7 @@ class KekeIsMove(commands.Cog, name="KEKE IS MOVE"):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        await self.nickname_change(message)
         await self.role_assign(message)
 
 def setup(bot):
-    bot.add_cog(KekeIsMove(bot))
+    bot.add_cog(RoleIconCog(bot))

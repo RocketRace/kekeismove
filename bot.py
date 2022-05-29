@@ -2,19 +2,24 @@
 # -*- coding: utf-8 -*-
 
 import json
+from typing import TypedDict
 
 import discord
 from discord.ext import commands
 
 import config
 
+class RoleIcon(TypedDict):
+    role_id: int
+    object_id: int
+    text_id: int
 
 class Bot(commands.Bot):
     nicknames_changed: int
     opted_in: list[int]
     nicknames_enabled: bool
     roles_enabled: bool
-    object_roles: dict[str, list[int]]
+    object_roles: dict[str, RoleIcon]
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
