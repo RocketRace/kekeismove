@@ -58,7 +58,7 @@ class Bot(commands.Bot):
             "roles": self.roles_enabled,
             "objects": self.object_roles
         }
-        json.dump(obj, open("settings.json", "w"))
+        json.dump(obj, open("settings.json", "w"), indent=4)
 
     async def close(self):
         self.save_settings()
