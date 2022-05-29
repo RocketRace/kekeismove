@@ -40,13 +40,15 @@ class RoleIconCog(commands.Cog, name="Role icons"):
         
         # 10 icons per field
         icons = sorted(
-            f"{name} <@&{icon['role_id']}>"
+            (name, f"<@&{icon['role_id']}>")
             for name, icon in self.bot.object_roles.items()
         )
+        icon_mentions = [x for _, x in icons]
+
         for i in range(0, len(icons), 10):
             embed.add_field(
                 name="\u200b",
-                value="\n".join(icons[i:i+10]),
+                value="\n".join(icon_mentions[i:i+10]),
                 inline=True
             )
 
