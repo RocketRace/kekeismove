@@ -121,7 +121,7 @@ class RoleIconCog(commands.Cog, name="Role icons"):
         try:
             if add:
                 object_ids = [
-                    id for [id, _] in self.bot.object_roles.values()
+                    icon["role_id"] for icon in self.bot.object_roles.values()
                 ]
                 held_roles = [
                     role
