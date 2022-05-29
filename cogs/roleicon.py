@@ -40,7 +40,7 @@ class RoleIconCog(commands.Cog, name="Role icons"):
         
         # 10 icons per field
         icons = sorted(
-            f"<a:{name}:{icon['role_id']}>"
+            f"{name} <@&{icon['role_id']}>"
             for name, icon in self.bot.object_roles.items()
         )
         for i in range(0, len(icons), 10):
