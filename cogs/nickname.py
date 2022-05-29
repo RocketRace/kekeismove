@@ -13,6 +13,8 @@ from bot import Bot
 class NicknameCog(commands.Cog, name="Nicknames"):
     '''KEKE IS CHEEKY'''
 
+    I_AM_PREFIXES = re.compile("|".join(("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m ")))
+
     def __init__(self, bot: Bot):
         self.bot = bot
     

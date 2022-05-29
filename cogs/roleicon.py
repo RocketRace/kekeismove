@@ -53,8 +53,6 @@ class RoleIconCog(commands.Cog, name="Role icons"):
             )
 
         await ctx.send(embed=embed)
-
-    I_AM_PREFIXES = re.compile("|".join(("i'm ", "I'm ", "im ", "Im ", "i am ", "I am ", "i’m ", "I’m ")))
     
     async def role_assign(self, message: discord.Message):
         if not isinstance(message.author, discord.Member):
