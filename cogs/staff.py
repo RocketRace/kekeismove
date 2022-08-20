@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 
 import discord
+from bot import Bot
 from discord.ext import commands
 
 from cogs.errors import *
-
-from bot import Bot
 
 
 class Staff(commands.Cog):
@@ -48,5 +48,5 @@ class Staff(commands.Cog):
         self.bot.nicknames_enabled = False
         await ctx.send("Nickname craziness disabled.")
 
-def setup(bot):
-    bot.add_cog(Staff(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(Staff(bot))

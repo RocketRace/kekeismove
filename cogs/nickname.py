@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 import random
 import re
 
 import discord
+from bot import Bot
 from discord.ext import commands
 
 from cogs.errors import *
 
-from bot import Bot
 
 def inline_codeblock(msg: str) -> str:
     clean_backtick = "\u200b`"
@@ -73,6 +75,7 @@ class NicknameCog(commands.Cog, name="Nicknames"):
             not message.channel.permissions_for(message.guild.me).send_messages
         ):
             return
+        
 
         match = self.I_AM_PREFIXES.match(message.content)
         if match is None:
@@ -84,28 +87,39 @@ class NicknameCog(commands.Cog, name="Nicknames"):
         
         escaped = inline_codeblock(nick)
 
+        is_ = "<a:is:793742253452558356>"
+        not_ = "<a:not:793742269848354856>"
+        prefix = f"{message.author.mention} {is_}"
+
         if nick.count("||") >= 2: # don't reveal spoilers
-            return await message.channel.send(
-                f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> "
-                f"||{escaped.replace('|', '')}|| (that nickname has spoilers!)\n"
+            return await self.bot.clearable_send(
+                message.author.id,
+                message.channel,
+                f"{prefix}{not_} ||{escaped.replace('|', '')}|| (that nickname has spoilers!)\n"
                 f"*Use the ``!optout`` command to hide me.*"
             )
         if len(nick) > 32:
-            return await message.channel.send(
-                f"{message.author.mention} <a:is:793742253452558356> <a:not:793742269848354856> " 
-                f"{escaped} (that nickname is too long!)\n" 
+            return await self.bot.clearable_send(
+                message.author.id,
+                message.channel,
+                f"{prefix}{not_} {escaped} (that nickname is too long!)\n" 
                 f"*Use the ``!optout`` command to hide me.*"
             )
         try:
-            await message.author.edit(nick=nick)
+            await message.author.edit(nick=nick) # type: ignore
         except discord.Forbidden:
-            await message.channel.send("I can't change your nickname! " 
+            return await self.bot.clearable_send(
+                message.author.id,
+                message.channel,
+                "I can't change your nickname! " 
                 "Do I have permissions to do so, or is your role above mine (or are you the server owner)?"
             )
         else:
             self.bot.nicknames_changed += 1
-            await message.channel.send(
-                f"{message.author.mention} <a:is:793742253452558356> {escaped}\n" 
+            return await self.bot.clearable_send(
+                message.author.id,
+                message.channel,
+                f"{prefix} {escaped}\n" 
                 f"*Use the ``!optout`` command to hide me.*"
             )
 
@@ -113,5 +127,5 @@ class NicknameCog(commands.Cog, name="Nicknames"):
     async def on_message(self, message: discord.Message):
         await self.nickname_change(message)
 
-def setup(bot):
-    bot.add_cog(NicknameCog(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(NicknameCog(bot))

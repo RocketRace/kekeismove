@@ -1,5 +1,6 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from __future__ import annotations
+import asyncio
 
 import json
 from typing import TypedDict
@@ -8,6 +9,7 @@ import discord
 from discord.ext import commands
 
 import config
+
 
 class RoleIcon(TypedDict):
     role_id: int
@@ -39,15 +41,17 @@ class Bot(commands.Bot):
             self.nicknames_enabled = True
             self.object_roles = {}
 
+    async def setup_hook(self):
         for cog in config.cogs:
             try:
-                self.load_extension(cog, package="bot")
+                await self.load_extension(cog, package="bot")
             except Exception as err:
                 print(f"Could not load extension {cog} due to {err.__class__.__name__}: {err}")
 
     async def on_ready(self):
-        print(f"Logged on as {self.user} (ID: {self.user.id})")
-        print(discord.utils.oauth_url(str(self.user.id) ,permissions=discord.Permissions(470150208)))
+        if self.user is not None:
+            print(f"Logged on as {self.user} (ID: {self.user.id})")
+            print(discord.utils.oauth_url(str(self.user.id) ,permissions=discord.Permissions(470150208)))
 
     def save_settings(self):
         obj = {
@@ -59,16 +63,37 @@ class Bot(commands.Bot):
         }
         json.dump(obj, open("settings.json", "w"), indent=4)
 
+    async def clearable_send(self, author_id: int, channel: discord.abc.MessageableChannel, content: str):
+        message = await channel.send(content)
+        emoji = self.get_emoji(1010603955652395088)
+        if emoji:
+            await message.add_reaction(emoji)
+
+            def check(react: discord.RawReactionActionEvent):
+                return (
+                    react.message_id == message.id and
+                    react.emoji.id == emoji.id and
+                    react.user_id == author_id
+                ) 
+            
+            try:
+                await self.wait_for("raw_reaction_add", check=check, timeout=60.0)
+                await message.delete()
+            except asyncio.TimeoutError:
+                await message.remove_reaction(emoji, message.author)
+
     async def close(self):
         self.save_settings()
 
 intents = discord.Intents(
-    guilds=True, # required for basic functions
-    guild_messages=True, # required for commands & rr
-    members=True, # required to keep track of icon roles
+    guilds=True,
+    guild_messages=True,
+    reactions=True,
+    message_content=True,
+    members=True,
 )
 
-def get_prefix(bot, message):
+def get_prefix(bot: Bot, message: discord.Message):
     return commands.when_mentioned_or("!")(bot, message)
 
 bot = Bot(
@@ -83,4 +108,5 @@ async def global_check(ctx: commands.Context):
     return ctx.guild is not None
     # No DM commands, only allowed in one guild
 
-bot.run(config.token)
+if __name__ == "__main__":
+    bot.run(config.token)

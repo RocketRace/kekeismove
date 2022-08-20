@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 import io
 import traceback
 
 import discord
-from discord.ext import commands
-
 from bot import Bot
+from discord.ext import commands
 
 
 class EmbedHelp(commands.DefaultHelpCommand):
@@ -55,10 +56,10 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         '''Load cogs'''
         if len(cogs) == 0:
             for cog in self.bot.cog_names:
-                self.bot.reload_extension(cog)
+                await self.bot.reload_extension(cog)
         else:
             for cog in cogs:
-                self.bot.reload_extension(f"cogs/{cog}")
+                await self.bot.reload_extension(f"cogs/{cog}")
         await ctx.send("Done.")
 
     @commands.command(name="exit")
@@ -93,5 +94,5 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
         self.bot.save_settings()
         await ctx.send(f"Added `{name}` icon")
 
-def setup(bot):
-    bot.add_cog(Admin(bot))
+async def setup(bot: Bot):
+    await bot.add_cog(Admin(bot))
