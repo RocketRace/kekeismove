@@ -87,8 +87,8 @@ class NicknameCog(commands.Cog, name="Nicknames"):
         
         escaped = inline_codeblock(nick)
 
-        is_ = "<a:is:793742253452558356>"
-        not_ = "<a:not:793742269848354856>"
+        is_ = f"<a:is:{self.bot.emoji_data['is_']}>"
+        not_ = f"<a:not:{self.bot.emoji_data['not_']}>"
         prefix = f"{message.author.mention} {is_}"
 
         if nick.count("||") >= 2: # don't reveal spoilers

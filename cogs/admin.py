@@ -62,13 +62,13 @@ class Admin(commands.Cog, command_attrs=dict(hidden=True)):
                 await self.bot.reload_extension(f"cogs/{cog}")
         await ctx.send("Done.")
 
-    @commands.command(name="exit")
+    @commands.command(name="exit", aliases=["logout"])
     async def exit_(self, ctx: commands.Context):
         '''Bye bye!'''
         await ctx.send("Exiting...")
         await self.bot.close()
 
-    @commands.command()
+    @commands.command(aliases=["eval", "py"])
     async def dev(self, ctx: commands.Context, *, content: str):
         '''Evals code'''
         import contextlib

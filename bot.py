@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-import asyncio
 
+import asyncio
 import json
 from typing import TypedDict
 
@@ -15,17 +15,24 @@ class RoleIcon(TypedDict):
     role_id: int
     text_id: int
 
+class EmojiConfig(TypedDict):
+    delete: int
+    is_: int
+    not_: int
+
 class Bot(commands.Bot):
     nicknames_changed: int
     opted_in: list[int]
     nicknames_enabled: bool
     roles_enabled: bool
     object_roles: dict[str, RoleIcon]
+    emoji_data: EmojiConfig
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         self.cog_names = config.cogs
+        self.emoji_data = config.emoji
         try:
             with open("settings.json") as f:
                 obj = json.load(f)
@@ -65,7 +72,7 @@ class Bot(commands.Bot):
 
     async def clearable_send(self, author_id: int, channel: discord.abc.MessageableChannel, content: str):
         message = await channel.send(content)
-        emoji = self.get_emoji(1010603955652395088)
+        emoji = self.get_emoji(self.emoji_data["delete"])
         if emoji:
             await message.add_reaction(emoji)
 
@@ -77,13 +84,14 @@ class Bot(commands.Bot):
                 ) 
             
             try:
-                await self.wait_for("raw_reaction_add", check=check, timeout=60.0)
+                await self.wait_for("raw_reaction_add", check=check, timeout=180.0)
                 await message.delete()
             except asyncio.TimeoutError:
                 await message.remove_reaction(emoji, message.author)
 
     async def close(self):
         self.save_settings()
+        await super().close()
 
 intents = discord.Intents(
     guilds=True,
@@ -94,7 +102,7 @@ intents = discord.Intents(
 )
 
 def get_prefix(bot: Bot, message: discord.Message):
-    return commands.when_mentioned_or("!")(bot, message)
+    return commands.when_mentioned_or(config.prefix)(bot, message)
 
 bot = Bot(
     command_prefix=get_prefix,

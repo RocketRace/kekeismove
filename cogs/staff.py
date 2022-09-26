@@ -43,7 +43,7 @@ class Staff(commands.Cog):
     
     @commands.command(name="disablenicknames")
     @commands.is_owner()
-    async def dis_nicknames(self, ctx: commands.Context):
+    async def disable_nicknames(self, ctx: commands.Context):
         '''Disables automatic nickname changes'''
         self.bot.nicknames_enabled = False
         await ctx.send("Nickname craziness disabled.")

@@ -94,8 +94,8 @@ class RoleIconCog(commands.Cog, name="Role icons"):
             return
         
         mention = message.author.mention
-        is_ =  "<a:is:793742253452558356>"
-        not_ = "<a:not:793742269848354856>"
+        is_ =  f"<a:is:{self.bot.emoji_data['is_']}>"
+        not_ = f"<a:not:{self.bot.emoji_data['not_']}>"
         prefix = f"{mention} {is_}{not_ if not add else ''}"
 
         if tile not in self.bot.object_roles:
